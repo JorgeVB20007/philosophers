@@ -6,20 +6,26 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:18:37 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/01 20:22:44 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/01 22:17:31 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "philosophers.h"
+#include "../includes/philosophers.h"
 
-int	are_all_digits(char *str)
+int	positive_atoi(char *str)
 {
 	int	a;
+	int	status;
 
-	while (str[a])
+	a = -1;
+	status = 1;
+	while (str[++a])
 	{
 		if (str[a] < '0' || str[a] > '9')
-			return (0);
+			status = 0;
 	}
-	return (1);
+	if (status)
+		return (ft_atoi(str));
+	else
+		return (-1);
 }

@@ -6,7 +6,7 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/01 20:23:06 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/01 21:35:38 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -24,7 +24,7 @@ NAME = philosophers
 LIBFT = libft.a
 CC = @gcc
 RM = rm -f
-CFLAGS = -Wall -Werror -Wextra
+CFLAGS = -Wall -Werror -Wextra -lpthread
 
 all:		${NAME}
 ${NAME}:	${LIBFT} ${OBJS} 
