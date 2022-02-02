@@ -1,4 +1,14 @@
 *.o
 /libft/*.o
+/libft/*.a
 .vscode
 .DS_Store
+philosophers
+philo
+a.out
+a
+b
+c
+d
+test*
+*test
