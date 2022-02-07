@@ -12,3 +12,10 @@ c
 d
 test*
 *test
+*test*
+*.dSYM
+*.dSYM/*
+obj
+objs
+obj/
+objs/
