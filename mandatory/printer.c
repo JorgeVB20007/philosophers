@@ -6,16 +6,17 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:47:02 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/07 20:46:15 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:32:18 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	printer(t_philokit kit, char *action)
+void	printer(t_philokit kit, char *action, long time)
 {
 	pthread_mutex_lock(kit.input.printer_key);
-	printf("%ld %d %s\n", ((get_time() - kit.input.start_time)), kit.id, action);
+	printf("%6ld \033[1m%d\033[m %s\n", (time - kit.input.start_time), \
+	kit.id, action);
 	pthread_mutex_unlock(kit.input.printer_key);
 }
 

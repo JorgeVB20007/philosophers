@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/07 20:45:56 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:44:48 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,10 +15,10 @@
 # define FRK_R "has taken their right fork"
 # define FRK_L "has taken their left fork"
 # define FRK "has taken a fork" 
-# define EAT "is eating"
-# define SLP "is sleeping"
-# define TNK "is thinking"
-# define DIE "died"
+# define EAT "\033[0;33mis eating\033[m"
+# define SLP "\033[0;32mis sleeping\033[m"
+# define TNK "\033[0;36mis thinking\033[m"
+# define DIE "\033[1;31died\033[m"
 
 # include <stdio.h>
 # include <unistd.h>
@@ -41,16 +41,32 @@ typedef struct s_stats
 typedef struct s_philokit
 {
 	int				id;
+	long			time4death;
+	long			time4end;
+	int				status;
 	pthread_mutex_t	*right;
 	pthread_mutex_t	*left;
 	t_stats			input;
 }	t_philokit;
 
-int		positive_atoi(char *str);
-long	get_time(void);
-void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst);
+enum	e_action_being_done
+{
+	DEAD,
+	THINKING,
+	EATING,
+	SLEEPING
+};
+
+//*	mandatory/printer.c
 void	printer_str(pthread_mutex_t *key, char *text);
 void	printer_num(pthread_mutex_t *key, int num);
-void	printer(t_philokit kit, char *action);
+void	printer(t_philokit kit, char *action, long time);
+
+//*	mandatory/threads.c
+void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst);
+
+//*	mandatory/utils.c
+long	get_time(void);
+int		positive_atoi(char *str);
 
 #endif

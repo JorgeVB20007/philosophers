@@ -6,12 +6,16 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:18:37 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/07 20:42:48 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/09 21:19:29 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
+/*
+* Gets the time in miliseconds (ms)
+? 1000usec = 1msec | 1000msec = 1sec
+*/
 long	get_time(void)
 {
 	struct timeval	time;
