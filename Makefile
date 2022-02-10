@@ -6,14 +6,15 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/02 19:18:11 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/10 23:09:42 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-SRCS	=	philosophers.c			\
-			threads.c				\
-			utils.c
+SRCS	=	mandatory/philosophers.c			\
+			mandatory/threads.c				\
+			mandatory/utils.c					\
+			mandatory/printer.c
 
 OBJS = ${SRCS:.c=.o}
 
@@ -21,29 +22,26 @@ PATH_INCLUDES = ./includes/
 PATH_LIBFT = ./libft/
 PATH_MANDATORY = ./mandatory/
 
-NAME = philosophers
+NAME = philo
 LIBFT = libft.a
 CC = @gcc
-RM = rm -rf
-CFLAGS = -Wall -Werror -Wextra #-lpthread
-OBJS_PTH = $(addprefix ./obj/, $(OBJS))
-SRCS_PTH = $(addprefix ./mandatory/, $(SRCS))
+RM = rm -f
+CFLAGS = -Wall -Werror -Wextra
 
-all:		obj ${NAME}
-${NAME}:	${LIBFT} ${OBJS_PTH} 
-	@echo "\033[0;33mStarting compilation\033[0m"
-	${CC} ${CFLAGS} ${PATH_LIBFT}${LIBFT} ${OBJS_PTH} -I ${PATH_INCLUDES} -o ${NAME}
-	@echo "\033[1;32m>\033[1;36m" ${NAME} "\033[0;32msuccessfully compiled!\033[0m"
+all:		${NAME}
+${NAME}:	${LIBFT} ${OBJS}
+			@echo "\033[0;33mCompilation started\033[0m"
+			${CC} ${CFLAGS} ${PATH_LIBFT}${LIBFT} ${OBJS} -I ${PATH_INCLUDES} -o ${NAME}
+			@echo "\033[1;32m${NAME}\033[0;32m was successfully compiled!\033[0m"
 ${LIBFT}:	
-	@make -C ${PATH_LIBFT}
-obj:	
-	@mkdir -p ./obj/
+			@make -C ${PATH_LIBFT}
 clean:
-	@echo "\033[0;33mCleaning some stuff over here!\033[0m"
-	@${RM} ./obj/
+	@echo "\033[0;34mCleaning started\033[0m"
+	@${RM} ${OBJS}
 	@make clean -C ${PATH_LIBFT}
-	@echo "\033[0;32mCleaning done!\033[0m"
+	@echo "\033[0;36mCleaning done\033[0m"
 fclean:		clean
 	@${RM} ${NAME} libft/${LIBFT}
+	@echo "\033[0;36m(executables \033[1;36m${NAME}\033[0;36m and \033[1;36m${LIBFT}\033[0;36m were also removed)\033[0m"
 re:		fclean all
 .PHONY: all clean fclean re

@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:18:37 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/09 21:19:29 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/10 21:41:33 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,4 +42,15 @@ int	positive_atoi(char *str)
 		return (ft_atoi(str));
 	else
 		return (-1);
+}
+
+/*
+*	Returns 1 if someone died or everyone ate 6 times. Returns 0 otherwise.
+*/
+int	is_ok_to_end(t_philokit kit)
+{
+	if (*(kit.someone_died) < 0 || *(kit.someone_died) >= kit.input.num_philo)
+		return (1);
+	else
+		return (0);
 }
