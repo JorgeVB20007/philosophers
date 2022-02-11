@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:46 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/09 21:30:54 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/11 21:59:07 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,20 @@ static pthread_mutex_t	**create_mutexes(int num_philo)
 	return (mutex_lst);
 }
 
+static void	destroy_mutexes(int num_philo, pthread_mutex_t ***mutex_lst)
+{
+	int				ctr;
+
+	ctr = -1;
+	while (++ctr < num_philo)
+	{
+		pthread_mutex_destroy((*mutex_lst)[ctr]);
+		free((*mutex_lst)[ctr]);
+	}
+	free((*mutex_lst)[ctr]);
+	free(*mutex_lst);
+}
+
 int	main(int argc, char **argv)
 {
 	t_stats			stats;
@@ -62,6 +76,8 @@ int	main(int argc, char **argv)
 	stats = set_struct(argc, argv);
 	mutex_lst = create_mutexes(stats.num_philo);
 	create_philos(stats, mutex_lst);
+	destroy_mutexes(stats.num_philo, &mutex_lst);
+//	system("leaks philo");
 	return (0);
 }
 

@@ -6,42 +6,61 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/10 23:09:42 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/11 19:36:49 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
-SRCS	=	mandatory/philosophers.c			\
-			mandatory/threads.c				\
-			mandatory/utils.c					\
-			mandatory/printer.c
+NAME	= philo
+GCC		= gcc
+FLAGS	= -Wall -Wextra -Werror -g3 -fsanitize=address
 
-OBJS = ${SRCS:.c=.o}
+INCLUDES_FILES =	philosophers.h
 
-PATH_INCLUDES = ./includes/
-PATH_LIBFT = ./libft/
-PATH_MANDATORY = ./mandatory/
+MAND_FILES	= 	philosophers.c	\
+				printer.c		\
+				threads.c		\
+				utils.c
 
-NAME = philo
-LIBFT = libft.a
-CC = @gcc
-RM = rm -f
-CFLAGS = -Wall -Werror -Wextra
+OBJ_FILES	= $(MAND_FILES:.c=.o)
 
-all:		${NAME}
-${NAME}:	${LIBFT} ${OBJS}
-			@echo "\033[0;33mCompilation started\033[0m"
-			${CC} ${CFLAGS} ${PATH_LIBFT}${LIBFT} ${OBJS} -I ${PATH_INCLUDES} -o ${NAME}
-			@echo "\033[1;32m${NAME}\033[0;32m was successfully compiled!\033[0m"
-${LIBFT}:	
-			@make -C ${PATH_LIBFT}
+MAND_DIR = ./mandatory/
+OBJ_DIR = ./objects/
+INC_DIR = ./includes/
+LIBFT_DIR = ./libft/
+
+MAND = $(addprefix $(MAND_DIR), $(MAND_FILES))
+OBJ = $(addprefix $(OBJ_DIR), $(OBJ_FILES))
+INCLUDES = $(addprefix $(INC_DIR), $(INCLUDES_FILES))
+LIBFT = $(addprefix $(LIBFT_DIR), libft.a)
+
+LNK  = -L $(LIBFT_DIR) -lft
+
+all: obj $(LIBFT) $(NAME)
+
+obj:
+	@mkdir -p $(OBJ_DIR)
+$(OBJ_DIR)%.o:$(MAND_DIR)%.c $(INCLUDES)
+	@$(GCC) $(FLAGS) -I $(LIBFT_DIR) -I $(INC_DIR) -o $@ -c $<
+$(LIBFT):
+	@make -C $(LIBFT_DIR)
+
+$(NAME): $(OBJ)
+	@echo "\033[0;33mCompilation started\033[0;31m"
+	@$(GCC) $(OBJ) $(FLAGS) $(LNK) -lm -o $(NAME)
+	@echo "\033[0;32mCompilation successful. File \033[1;32m$(NAME)\033[0;32m generated!\033[0;37m"
+
 clean:
-	@echo "\033[0;34mCleaning started\033[0m"
-	@${RM} ${OBJS}
-	@make clean -C ${PATH_LIBFT}
-	@echo "\033[0;36mCleaning done\033[0m"
+			@echo "\033[0;34mCleaning started\033[0m"
+			@rm -Rf $(OBJ_DIR)
+			@make -C $(LIBFT_DIR) clean
+			@echo "\033[0;36mCleaning done. All objects were removed.\033[0m"
+
 fclean:		clean
-	@${RM} ${NAME} libft/${LIBFT}
-	@echo "\033[0;36m(executables \033[1;36m${NAME}\033[0;36m and \033[1;36m${LIBFT}\033[0;36m were also removed)\033[0m"
-re:		fclean all
-.PHONY: all clean fclean re
+			@rm -f $(NAME)
+			@make -C $(LIBFT_DIR) fclean
+			@echo "\033[0;36mExecutable \033[1;36m$(NAME)\033[0;36m removed!\033[0m"
+
+re:			fclean all
+
+.PHONY:		all clean fclean re

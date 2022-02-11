@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 19:18:50 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/10 22:08:03 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/11 22:13:27 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,16 +135,17 @@ void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst)
 {
 	int			ctr;
 	t_philokit	**new_kit;
-	pthread_t	*philolist;
+	pthread_t	**philolist;
 	int			someone_died;
 
 	ctr = 0;
 	someone_died = 0;
-	philolist = malloc(sizeof(pthread_t) * stats.num_philo + 1);
-	new_kit = malloc(sizeof(t_philokit *) * stats.num_philo + 1);
+	philolist = malloc(sizeof(pthread_t *) * stats.num_philo);
+	new_kit = malloc(sizeof(t_philokit *) * stats.num_philo);
 	while (ctr < stats.num_philo)
 	{
 		new_kit[ctr] = malloc(sizeof(t_philokit));
+		philolist[ctr] = malloc(sizeof(pthread_t));
 		(new_kit[ctr])->id = ctr + 1;
 		(new_kit[ctr])->left = mutex_lst[ctr];
 		(new_kit[ctr])->status = SLEEPING;
@@ -156,13 +157,22 @@ void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst)
 		else
 			(new_kit[ctr])->right = mutex_lst[ctr - 1];
 		(new_kit[ctr])->input = stats;
-		pthread_create(&(philolist[ctr]), NULL, new_philo, new_kit[ctr]);
+		pthread_create(philolist[ctr], NULL, new_philo, new_kit[ctr]);
 		ctr++;
 	}
 	ctr = 0;
 	while (ctr < stats.num_philo)
 	{
-		pthread_join(philolist[ctr], NULL);
+		pthread_join((*philolist)[ctr], NULL);
+		free(new_kit[ctr]);
 		ctr++;
 	}
+	ctr = 0;
+	while (ctr < stats.num_philo)
+	{
+		free(philolist[ctr]);
+		ctr++;
+	}
+	free(new_kit);
+	free(philolist);
 }
