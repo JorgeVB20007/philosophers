@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/02 19:18:50 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/11 22:13:27 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/12 23:24:17 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,19 +37,47 @@ static void	*death_while_waiting(void *unformatted_kit)
 	return (NULL);
 }
 
+static void	stopped_sleeping(t_philokit *kit, long *time, \
+pthread_t thread_while_waiting)
+{
+	*(kit->waiting4mutex) = 1;
+	pthread_create(&thread_while_waiting, NULL, death_while_waiting, kit);
+	pthread_mutex_lock(kit->right);
+	if (is_ok_to_end(*kit))
+	{
+		pthread_mutex_unlock(kit->right);
+		return ;
+	}
+	*time = get_time();
+	printer(*kit, FRK, *time);
+	pthread_mutex_lock(kit->left);
+	*(kit->waiting4mutex) = 0;
+	pthread_join(thread_while_waiting, NULL);
+	if (is_ok_to_end(*kit))
+	{
+		pthread_mutex_unlock(kit->right);
+		pthread_mutex_unlock(kit->left);
+		return ;
+	}
+	*time = get_time();
+	printer(*kit, FRK, *time);
+	kit->status = EATING;
+	kit->time4end = *time + kit->input.time2eat;
+	kit->time4death = *time + kit->input.time2die;
+	printer(*kit, EAT, *time);
+}
+
 static void	timesup(t_philokit *kit, long time)
 {
 	int			waiting4mutex;
-	pthread_t	thread_while_waiting;
 
 	waiting4mutex = 0;
-	thread_while_waiting = malloc(sizeof(pthread_t));
 	kit->waiting4mutex = &waiting4mutex;
 	if (kit->status == EATING)
 	{
 		kit->times_eaten = kit->times_eaten + 1;
 		if (kit->times_eaten == kit->input.min_eats)
-			kit->someone_died = kit->someone_died + 1;
+			(*(kit->someone_died))++;
 		if (is_ok_to_end(*kit))
 			return ;
 		printer(*kit, SLP, time);
@@ -62,31 +90,7 @@ static void	timesup(t_philokit *kit, long time)
 	{
 		kit->status = THINKING;
 		printer(*kit, TNK, time);
-		*(kit->waiting4mutex) = 1;
-		pthread_create(&thread_while_waiting, NULL, death_while_waiting, kit);
-		pthread_mutex_lock(kit->right);
-		if (is_ok_to_end(*kit))
-		{
-			pthread_mutex_destroy(kit->right);
-			return ;
-		}
-		time = get_time();
-		printer(*kit, FRK, time);
-		pthread_mutex_lock(kit->left);
-		*(kit->waiting4mutex) = 0;
-		pthread_join(thread_while_waiting, NULL);
-		if (is_ok_to_end(*kit))
-		{
-			pthread_mutex_destroy(kit->right);
-			pthread_mutex_destroy(kit->left);
-			return ;
-		}
-		time = get_time();
-		printer(*kit, FRK, time);
-		kit->status = EATING;
-		kit->time4end = time + kit->input.time2eat;
-		kit->time4death = time + kit->input.time2die;
-		printer(*kit, EAT, time);
+		stopped_sleeping(kit, &time, NULL);
 	}
 }
 
@@ -95,30 +99,20 @@ static void	*new_philo(void *unformatted_kit)
 	t_philokit	kit;
 	long		time;
 
-	time = get_time();
 	kit = *(t_philokit *)unformatted_kit;
-	kit.time4end = time;
+	kit.time4end = get_time();
 	if (kit.id % 2 == 0)
-	{
 		usleep(100);
-	}
-	usleep(1000);
 	while (!is_ok_to_end(kit))
 	{
 		time = get_time();
-		if (time >= kit.time4end)
+		if (time >= kit.time4end && kit.input.num_philo > 1)
 			timesup(&kit, time);
 		else if (time >= kit.time4death)
 		{
 			*(kit.someone_died) = -1;
 			printer(kit, DIE, time);
 			return (NULL);
-		}
-		else if (kit.status == EATING && is_ok_to_end(kit))
-		{
-			pthread_mutex_unlock(kit.left);
-			pthread_mutex_unlock(kit.right);
-			kit.status = -1;
 		}
 		usleep(50);
 	}
@@ -147,7 +141,10 @@ void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst)
 		new_kit[ctr] = malloc(sizeof(t_philokit));
 		philolist[ctr] = malloc(sizeof(pthread_t));
 		(new_kit[ctr])->id = ctr + 1;
-		(new_kit[ctr])->left = mutex_lst[ctr];
+		if (stats.num_philo == 1)
+			(new_kit[ctr])->left = NULL;
+		else
+			(new_kit[ctr])->left = mutex_lst[ctr];
 		(new_kit[ctr])->status = SLEEPING;
 		(new_kit[ctr])->someone_died = &someone_died;
 		(new_kit[ctr])->time4death = get_time() + stats.time2die;
@@ -160,19 +157,15 @@ void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst)
 		pthread_create(philolist[ctr], NULL, new_philo, new_kit[ctr]);
 		ctr++;
 	}
-	ctr = 0;
-	while (ctr < stats.num_philo)
+	ctr = -1;
+	while (++ctr < stats.num_philo)
 	{
-		pthread_join((*philolist)[ctr], NULL);
+		pthread_join(*(philolist[ctr]), NULL);
 		free(new_kit[ctr]);
-		ctr++;
 	}
-	ctr = 0;
-	while (ctr < stats.num_philo)
-	{
+	ctr = -1;
+	while (++ctr < stats.num_philo)
 		free(philolist[ctr]);
-		ctr++;
-	}
 	free(new_kit);
 	free(philolist);
 }

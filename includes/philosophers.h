@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/10 22:01:48 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/12 23:06:09 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,16 +14,11 @@
 # define PHILOSOPHERS_H
 # define FRK_R "has taken their right fork"
 # define FRK_L "has taken their left fork"
-# define FRK "has taken a fork" 
-//# define EAT "is eating"
-//# define SLP "is sleeping"
-//# define TNK "is thinking"
-//# define DIE "died"
+# define FRK "has taken a fork"
 # define EAT "\033[0;33mis eating\033[m"
 # define SLP "\033[0;32mis sleeping\033[m"
 # define TNK "\033[0;36mis thinking\033[m"
 # define DIE "\033[1;31mdied\033[m"
-
 
 # include <stdio.h>
 # include <unistd.h>

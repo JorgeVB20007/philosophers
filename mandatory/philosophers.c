@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:46 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/11 21:59:07 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/12 23:04:28 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,32 @@ static t_stats	set_struct(int argc, char **argv)
 	if (argc == 6)
 		stats.min_eats = positive_atoi(argv[5]);
 	else
-		stats.min_eats = -1;
+		stats.min_eats = -2;
 	pthread_mutex_init(&key_mkr, NULL);
 	stats.printer_key = &key_mkr;
 	stats.start_time = get_time();
 	return (stats);
+}
+
+static int	check_input_validity(t_stats stats)
+{
+	if (stats.num_philo < 1)
+	{
+		printf("Error: At least one philosopher is required.\n");
+		return (1);
+	}
+	if (stats.num_philo > 200)
+	{
+		printf("Error: Max amount of philosophers is 200.\n");
+		return (1);
+	}
+	if (stats.time2die < 1 || stats.time2eat < 1 || stats.time2sleep < 1 || \
+	stats.min_eats == -1)
+	{
+		printf("Four or five numeric arguments (1 - 2^31-1) are required.\n");
+		return (1);
+	}
+	return (0);
 }
 
 static pthread_mutex_t	**create_mutexes(int num_philo)
@@ -46,22 +67,22 @@ static pthread_mutex_t	**create_mutexes(int num_philo)
 		new_mutex = malloc(sizeof(pthread_mutex_t));
 		pthread_mutex_init(new_mutex, NULL);
 		mutex_lst[ctr] = new_mutex;
-		printf("%p\n", mutex_lst[ctr]);
 	}
 	mutex_lst[ctr] = NULL;
 	return (mutex_lst);
 }
 
-static void	destroy_mutexes(int num_philo, pthread_mutex_t ***mutex_lst)
+static void	destroy_mutexes(t_stats *stats, pthread_mutex_t ***mutex_lst)
 {
 	int				ctr;
 
 	ctr = -1;
-	while (++ctr < num_philo)
+	while (++ctr < (*stats).num_philo)
 	{
 		pthread_mutex_destroy((*mutex_lst)[ctr]);
 		free((*mutex_lst)[ctr]);
 	}
+	pthread_mutex_destroy((*stats).printer_key);
 	free((*mutex_lst)[ctr]);
 	free(*mutex_lst);
 }
@@ -74,10 +95,12 @@ int	main(int argc, char **argv)
 	if (argc < 5 || argc > 6)
 		return (1);
 	stats = set_struct(argc, argv);
+	if (check_input_validity(stats))
+		return (1);
 	mutex_lst = create_mutexes(stats.num_philo);
 	create_philos(stats, mutex_lst);
-	destroy_mutexes(stats.num_philo, &mutex_lst);
-//	system("leaks philo");
+	destroy_mutexes(&stats, &mutex_lst);
+	system("leaks philo");
 	return (0);
 }
 
