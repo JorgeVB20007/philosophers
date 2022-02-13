@@ -6,7 +6,7 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2021/05/27 18:51:37 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/01 18:43:47 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/13 18:49:28 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -44,6 +44,7 @@ SRCS	=	ft_memset.c \
 			ft_putstr_fd.c \
 			ft_putendl_fd.c \
 			ft_putnbr_fd.c \
+			ft_strcmp.c
 
 SRCSB	=	ft_lstnew.c \
 			ft_lstadd_front.c \
@@ -52,7 +53,7 @@ SRCSB	=	ft_lstnew.c \
 			ft_lstadd_back.c \
 			ft_lstdelone.c \
 			ft_lstclear.c \
-			ft_lstiter.c \
+			ft_lstiter.c
 
 OBJS = ${SRCS:.c=.o}
 OBJSB = ${SRCSB:.c=.o}

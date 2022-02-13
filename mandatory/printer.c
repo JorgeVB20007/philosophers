@@ -6,18 +6,25 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:47:02 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/10 21:51:47 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/13 20:10:23 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	printer(t_philokit kit, char *action, long time)
+void	printer(t_philokit kit, char *action, unsigned long long time)
 {
-	pthread_mutex_lock(kit.input.printer_key);
-	printf("%6ld \033[1m%d\033[m %s\n", (time - kit.input.start_time), \
-	kit.id, action);
-	pthread_mutex_unlock(kit.input.printer_key);
+	if (*(kit.someone_died) >= 0 && *(kit.someone_died) < kit.input.num_philo)
+	{
+		pthread_mutex_lock(kit.input.printer_key);
+		time = get_time(kit);
+		printf("\n%llu\n", get_time(kit));
+		printf("%6llu %s%d%s %s %p\n", (time - kit.input.start_time), \
+		BOLD, kit.id, FMT_RST, action, kit.input.printer_key);
+		pthread_mutex_unlock(kit.input.printer_key);
+	}
+	else if (!ft_strcmp(action, DIE))
+		*(kit.someone_died) = -1;
 }
 
 void	printer_str(pthread_mutex_t *key, char *text)

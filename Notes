@@ -1,0 +1,4 @@
+- Libft is not allowed.
+- Don't use a new thread to check whether the philo died while waiting or not.
+    - Instead, keep tracking the death times in the parent process, and if someone dies start joining threads back.
+- If there's a single philo, hardcode the output.  They should at least pick up the only fork available.

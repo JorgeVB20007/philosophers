@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 20:18:37 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/11 22:07:08 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/13 19:53:16 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,10 +16,22 @@
 * Gets the time in miliseconds (ms)
 ? 1000usec = 1msec | 1000msec = 1sec
 */
-long	get_time(void)
+unsigned long long	get_time(t_philokit kit)
 {
 	struct timeval	time;
-	long			total;
+	unsigned long long			total;
+
+	pthread_mutex_lock(kit.input.time_key);
+	gettimeofday(&time, NULL);
+	total = time.tv_usec / 1000 + time.tv_sec * 1000;
+	pthread_mutex_unlock(kit.input.time_key);
+	return (total);
+}
+
+unsigned long long	get_time2(void)
+{
+	struct timeval	time;
+	unsigned long long			total;
 
 	gettimeofday(&time, NULL);
 	total = time.tv_usec / 1000 + time.tv_sec * 1000;

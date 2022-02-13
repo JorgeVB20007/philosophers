@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:46 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/12 23:04:28 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/13 19:28:51 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@ static t_stats	set_struct(int argc, char **argv)
 {
 	t_stats			stats;
 	pthread_mutex_t	key_mkr;
+	pthread_mutex_t	key2_mkr;
 
 	stats.num_philo = positive_atoi(argv[1]);
 	stats.time2die = positive_atoi(argv[2]);
@@ -28,8 +29,10 @@ static t_stats	set_struct(int argc, char **argv)
 	else
 		stats.min_eats = -2;
 	pthread_mutex_init(&key_mkr, NULL);
+	pthread_mutex_init(&key2_mkr, NULL);
 	stats.printer_key = &key_mkr;
-	stats.start_time = get_time();
+	stats.time_key = &key2_mkr;
+	stats.start_time = get_time2();
 	return (stats);
 }
 
@@ -93,12 +96,15 @@ int	main(int argc, char **argv)
 	pthread_mutex_t	**mutex_lst;
 
 	if (argc < 5 || argc > 6)
+	{
+		printf("Error: At least 4 arguments are required.\n");
 		return (1);
+	}
 	stats = set_struct(argc, argv);
 	if (check_input_validity(stats))
 		return (1);
 	mutex_lst = create_mutexes(stats.num_philo);
-	create_philos(stats, mutex_lst);
+	create_philos(stats, mutex_lst, -1);
 	destroy_mutexes(&stats, &mutex_lst);
 	system("leaks philo");
 	return (0);

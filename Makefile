@@ -6,7 +6,7 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/12 22:00:30 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/13 18:02:07 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -19,6 +19,7 @@ INCLUDES_FILES =	philosophers.h
 
 MAND_FILES	= 	philosophers.c	\
 				printer.c		\
+				thread_new.c	\
 				threads.c		\
 				utils.c
 
@@ -51,15 +52,15 @@ $(NAME): $(OBJ)
 	@echo "\033[0;32mCompilation successful. File \033[1;32m$(NAME)\033[0;32m generated!\033[0;37m"
 
 clean:
-			@echo "\033[0;34mCleaning started\033[0m"
-			@rm -Rf $(OBJ_DIR)
-			@make -C $(LIBFT_DIR) clean
-			@echo "\033[0;36mCleaning done. All objects were removed.\033[0m"
+	@echo "\033[0;34mCleaning started\033[0m"
+	@rm -Rf $(OBJ_DIR)
+	@make -C $(LIBFT_DIR) clean
+	@echo "\033[0;36mCleaning done. All objects were removed.\033[0m"
 
 fclean:		clean
-			@rm -f $(NAME)
-			@make -C $(LIBFT_DIR) fclean
-			@echo "\033[0;36mExecutable \033[1;36m$(NAME)\033[0;36m removed!\033[0m"
+	@rm -f $(NAME)
+	@make -C $(LIBFT_DIR) fclean
+	@echo "\033[0;36mExecutable \033[1;36m$(NAME)\033[0;36m removed!\033[0m"
 
 re:			fclean all
 
