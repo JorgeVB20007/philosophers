@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/13 19:51:52 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/14 22:17:30 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,28 +33,24 @@
 
 typedef struct s_stats
 {
-	int				num_philo;
-	int				time2die;
-	int				time2eat;
-	int				time2sleep;
-	int				min_eats;
-	pthread_mutex_t	*printer_key;
-	pthread_mutex_t	*time_key;
-	unsigned long long			start_time;
+	int					num_philo;
+	int					time2die;
+	int					time2eat;
+	int					time2sleep;
+	int					min_eats;
+	pthread_mutex_t		*printer_key;
+	unsigned long long	start_time;
 }	t_stats;
 
 typedef struct s_philokit
 {
-	int				id;
-	unsigned long long			time4death;
-	unsigned long long			time4end;
-	int				status;
-	int				times_eaten;
-	int				*someone_died;
-	int				*waiting4mutex;
-	pthread_mutex_t	*right;
-	pthread_mutex_t	*left;
-	t_stats			input;
+	int					id;
+	int					*status;
+	int					times_eaten;
+	int					*just_ate;
+	pthread_mutex_t		*right;
+	pthread_mutex_t		*left;
+	t_stats				stats;
 }	t_philokit;
 
 enum	e_action_being_done
@@ -66,20 +62,20 @@ enum	e_action_being_done
 };
 
 //*	mandatory/printer.c
-void	printer_str(pthread_mutex_t *key, char *text);
-void	printer_num(pthread_mutex_t *key, int num);
-void	printer(t_philokit kit, char *action, unsigned long long time);
+////void				printer_str(pthread_mutex_t *key, char *text);
+////void				printer_num(pthread_mutex_t *key, int num);
+////void				printer(t_philokit kit, char *action, unsigned long long time);
 
 //*	mandatory/thread_new.c
-void	*new_philo(void *unformatted_kit);
+////void				*new_philo(void *unformatted_kit);
 
 //*	mandatory/threads.c
-void	create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
+////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
 
 //*	mandatory/utils.c
-unsigned long long	get_time(t_philokit kit);
-unsigned long long	get_time2(void);
-int		positive_atoi(char *str);
-int		is_ok_to_end(t_philokit kit);
+unsigned long long	get_time(void);
+////unsigned long long	get_time2(void);
+int					positive_atoi(char *str);
+////int					is_ok_to_end(t_philokit kit);
 
 #endif

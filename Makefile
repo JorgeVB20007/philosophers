@@ -6,7 +6,7 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/13 18:02:07 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/14 21:32:27 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -17,10 +17,8 @@ FLAGS	= -Wall -Wextra -Werror #-g3 -fsanitize=address
 
 INCLUDES_FILES =	philosophers.h
 
-MAND_FILES	= 	philosophers.c	\
-				printer.c		\
-				thread_new.c	\
-				threads.c		\
+MAND_FILES	= 	parent.c		\
+				philosophers.c	\
 				utils.c
 
 OBJ_FILES	= $(MAND_FILES:.c=.o)
