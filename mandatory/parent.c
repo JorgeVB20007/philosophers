@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parent.c                                           :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
+/*   Updated: 2022/02/15 19:22:29 by jvacaris         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philosophers.h"
 
 static pthread_mutex_t	*create_forks(t_stats stats)
@@ -14,25 +26,28 @@ static pthread_mutex_t	*create_forks(t_stats stats)
 	return (mutex_list);
 }
 
-static t_philokit	*create_kits(t_stats stats, pthread_mutex_t *forks)
+static t_philokit	**create_kits(t_stats stats, pthread_mutex_t *forks)
 {
-	t_philokit	*kit_list;
+	t_philokit	**kit_list;
 	int			ctr;
 
 	ctr = -1;
 	kit_list = malloc(sizeof(t_philokit *) * stats.num_philo);
 	while (++ctr < stats.num_philo)
 	{
-		kit_list[ctr].id = ctr + 1;
-		*(kit_list[ctr].status) = THINKING;
-		kit_list[ctr].times_eaten = 0;
-		kit_list[ctr].stats = stats;
-		*(kit_list[ctr].just_ate) = 0;
-		kit_list[ctr].left = &(forks[ctr]);
+		kit_list[ctr] = malloc(sizeof(t_philokit));
+		kit_list[ctr]->id = ctr + 1;
+		kit_list[ctr]->temp_status = THINKING;
+		kit_list[ctr]->status = &(kit_list[ctr]->temp_status);		// ? This might be unnecessary.
+		kit_list[ctr]->times_eaten = 0;
+		kit_list[ctr]->stats = stats;
+		kit_list[ctr]->temp_just_ate = 0;
+		kit_list[ctr]->just_ate = &(kit_list[ctr]->temp_just_ate);	// ? This might be unnecessary.
+		kit_list[ctr]->left = &(forks[ctr]);
 		if (ctr == 0)
-			kit_list[ctr].right = &(forks[stats.num_philo - 1]);
+			kit_list[ctr]->right = &(forks[stats.num_philo - 1]);
 		else
-			kit_list[ctr].right = &(forks[ctr - 1]);
+			kit_list[ctr]->right = &(forks[ctr - 1]);
 	}
 	return (kit_list);
 }
@@ -64,7 +79,7 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 void	create_threads(t_stats stats)
 {
 	int				ctr;
-	t_philokit		*kit_list;
+	t_philokit		**kit_list;
 	pthread_mutex_t	*forks_list;
 	pthread_t		*threads;
 
@@ -74,6 +89,11 @@ void	create_threads(t_stats stats)
 	threads = malloc(sizeof(pthread_t *) * stats.num_philo);
 	while (++ctr < stats.num_philo)
 	{
-		pthread_create(&(threads[ctr]), NULL, (IDK), (void *)kit_list);
+		pthread_create(&(threads[ctr]), NULL, philoroutine, (void *)(kit_list[ctr]));
+	}
+	ctr = -1;
+	while (++ctr < stats.num_philo)
+	{
+		pthread_join(threads[ctr], NULL);
 	}
 }

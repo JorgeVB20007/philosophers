@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/14 22:17:30 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/15 18:55:04 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,8 +45,10 @@ typedef struct s_stats
 typedef struct s_philokit
 {
 	int					id;
+	int					temp_status;
 	int					*status;
 	int					times_eaten;
+	int					temp_just_ate;
 	int					*just_ate;
 	pthread_mutex_t		*right;
 	pthread_mutex_t		*left;
@@ -61,6 +63,13 @@ enum	e_action_being_done
 	SLEEPING
 };
 
+//* philoroutine.c
+void	*philoroutine(void *unformatted_kit);
+
+//* parent.c
+
+void	create_threads(t_stats stats);
+
 //*	mandatory/printer.c
 ////void				printer_str(pthread_mutex_t *key, char *text);
 ////void				printer_num(pthread_mutex_t *key, int num);
@@ -73,7 +82,10 @@ enum	e_action_being_done
 ////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
 
 //*	mandatory/utils.c
+void				ft_wait(int time);
+void				printer(t_philokit kit, char *action);
 unsigned long long	get_time(void);
+
 ////unsigned long long	get_time2(void);
 int					positive_atoi(char *str);
 ////int					is_ok_to_end(t_philokit kit);

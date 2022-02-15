@@ -1,4 +1,35 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   utils.c                                            :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
+/*   Updated: 2022/02/15 19:05:54 by jvacaris         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philosophers.h"
+
+void	printer(t_philokit kit, char *action)
+{
+	pthread_mutex_lock(kit.stats.printer_key);
+	printf("%6llu %s%d%s %s\n", get_time() - kit.stats.start_time, BOLD, kit.id, FMT_RST, action);
+	pthread_mutex_unlock(kit.stats.printer_key);
+}
+
+// Will wait *time* nanoseconds.
+void	ft_wait(int time)
+{
+	unsigned long long	final_time;
+
+	final_time = get_time() + (unsigned long long) time;
+	while (final_time > get_time())
+	{
+		usleep (5);
+	}
+}
 
 int	positive_atoi(char *str)
 {

@@ -18,6 +18,7 @@ FLAGS	= -Wall -Wextra -Werror #-g3 -fsanitize=address
 INCLUDES_FILES =	philosophers.h
 
 MAND_FILES	= 	parent.c		\
+				philoroutine.c	\
 				philosophers.c	\
 				utils.c
 

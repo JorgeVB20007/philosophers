@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   philosophers.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
+/*   Updated: 2022/02/15 19:01:57 by jvacaris         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../includes/philosophers.h"
 
 static int parsing(int argc, char **argv)
@@ -18,7 +30,7 @@ static int parsing(int argc, char **argv)
 		printf("Error: Invalid times (must be over 20ms).\n");
 		return (1);
 	}
-	if (positive_atoi(argv[5]) < 0)
+	if (argc == 6 && positive_atoi(argv[5]) < 0)
 	{
 		printf("Error: Invalid last argument (must be over 0).\n");
 		return (1);
@@ -35,12 +47,14 @@ static t_stats	set_stats(int argc, char **argv)
 	stats.time2die = positive_atoi(argv[2]);
 	stats.time2eat = positive_atoi(argv[3]);
 	stats.time2sleep = positive_atoi(argv[4]);
-	if (argc == 5)
+	if (argc == 6)
 		stats.min_eats = positive_atoi(argv[5]);
 	else
 		stats.min_eats = -1;
 	pthread_mutex_init(&key, NULL);
 	stats.printer_key = &key;
+	stats.start_time = get_time();
+	return (stats);
 }
 
 int	main(int argc, char **argv)
@@ -50,4 +64,5 @@ int	main(int argc, char **argv)
 	if (parsing(argc, argv))
 		return (1);
 	stats = set_stats(argc, argv);
+	create_threads(stats);
 }
