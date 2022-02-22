@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/15 18:55:04 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/21 21:26:19 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,8 @@ enum	e_action_being_done
 	DEAD,
 	THINKING,
 	EATING,
-	SLEEPING
+	SLEEPING,
+	STOP
 };
 
 //* philoroutine.c

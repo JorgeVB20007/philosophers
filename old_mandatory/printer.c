@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/06 19:47:02 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/13 20:10:23 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/21 21:21:51 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ void	printer(t_philokit kit, char *action, unsigned long long time)
 		printf("\n%llu\n", get_time(kit));
 		printf("%6llu %s%d%s %s %p\n", (time - kit.input.start_time), \
 		BOLD, kit.id, FMT_RST, action, kit.input.printer_key);
+		printf("someone_died = %d\n", *(kit.someone_died));
 		pthread_mutex_unlock(kit.input.printer_key);
 	}
 	else if (!ft_strcmp(action, DIE))
