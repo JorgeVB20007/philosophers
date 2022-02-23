@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/21 21:26:19 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/23 22:32:45 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,6 +86,8 @@ void	create_threads(t_stats stats);
 void				ft_wait(int time);
 void				printer(t_philokit kit, char *action);
 unsigned long long	get_time(void);
+int					change_if_possible(t_philokit kit, int action);
+
 
 ////unsigned long long	get_time2(void);
 int					positive_atoi(char *str);
