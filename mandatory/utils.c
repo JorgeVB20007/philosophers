@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:02:07 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:36:59 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ void	printer(t_philokit kit, char *action)
 		{
 			if ((*(kit.status) == DEAD && !ft_strcmp(action, DIE)) || *(kit.status) != DEAD)
 			{
-				printf("%d   %6llu - %6llu = %6llu  %s%3d%s %s\n", ((*(kit.status) == DEAD) * 2) + (*(kit.status) == STOP), get_time(kit.stats.timer_key), /*- */kit.stats.start_time, get_time(kit.stats.timer_key) - kit.stats.start_time, BOLD, kit.id, FMT_RST, action);
+				printf("%6llu %s%3d%s %s\n", (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1000, BOLD, kit.id, FMT_RST, action);
 			}
 		}
 		if (*(kit.status) == DEAD)

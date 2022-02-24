@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:20:24 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:24:45 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static unsigned long long	*set_death_times(int philos, int time2die, pthread_mut
 	death_times = malloc(sizeof(unsigned long long) * philos);
 	while (a < philos)
 	{
-		death_times[a] = get_time(timer_key) + (unsigned long long)time2die;
+		death_times[a] = get_time(timer_key) + (unsigned long long)time2die * 1000;
 		a++;
 	}
 	return (death_times);

@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:29 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:07:06 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:35:59 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,14 +49,14 @@ void	*philoroutine(void *unformatted_kit)
 	{
 		if (eatingroutine(&kit))
 			return (NULL);
-		ft_wait(kit.stats.time2eat * 1000, kit.stats.timer_key);
+		ft_wait(kit.stats.time2eat, kit.stats.timer_key);
 		pthread_mutex_unlock(kit.right);
 		pthread_mutex_unlock(kit.left);
 		if (*(kit.status) == STOP)
 			return (NULL);
 		printer(kit, SLP);
 		*(kit.status) = change_if_possible(kit, SLEEPING);
-		ft_wait(kit.stats.time2sleep * 1000, kit.stats.timer_key);
+		ft_wait(kit.stats.time2sleep, kit.stats.timer_key);
 		if (*(kit.status) == STOP)
 			return (NULL);
 		printer(kit, TNK);
