@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/23 22:32:45 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 19:44:18 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,7 @@ typedef struct s_stats
 	int					time2sleep;
 	int					min_eats;
 	pthread_mutex_t		*printer_key;
+	pthread_mutex_t		*timer_key;
 	unsigned long long	start_time;
 }	t_stats;
 
@@ -83,9 +84,9 @@ void	create_threads(t_stats stats);
 ////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
 
 //*	mandatory/utils.c
-void				ft_wait(int time);
+void				ft_wait(int time, pthread_mutex_t *timer_key);
 void				printer(t_philokit kit, char *action);
-unsigned long long	get_time(void);
+unsigned long long	get_time(pthread_mutex_t *timer_key);
 int					change_if_possible(t_philokit kit, int action);
 
 

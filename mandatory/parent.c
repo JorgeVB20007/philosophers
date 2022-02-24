@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/23 23:19:55 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:20:24 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,7 @@ static t_philokit	*create_kits(t_stats stats, pthread_mutex_t *forks)
 	return (kit_list);
 }
 
-static unsigned long long	*set_death_times(int philos, int time2die)
+static unsigned long long	*set_death_times(int philos, int time2die, pthread_mutex_t *timer_key)
 {
 	int	a;
 	unsigned long long	*death_times;
@@ -61,7 +61,7 @@ static unsigned long long	*set_death_times(int philos, int time2die)
 	death_times = malloc(sizeof(unsigned long long) * philos);
 	while (a < philos)
 	{
-		death_times[a] = get_time() + (unsigned long long)time2die;
+		death_times[a] = get_time(timer_key) + (unsigned long long)time2die;
 		a++;
 	}
 	return (death_times);
@@ -85,17 +85,17 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 	unsigned long long	*death_times;
 	unsigned long long	time;
 
-	death_times = set_death_times(stats.num_philo, stats.time2die);
+	death_times = set_death_times(stats.num_philo, stats.time2die, stats.timer_key);
 	while (1)
 	{
 		ctr = -1;
-		time = get_time();
+		time = get_time(stats.timer_key);
 		while (++ctr < stats.num_philo)
 		{
 			if (*(kit_list[ctr].just_ate) == 1)
 			{
 //				printer(*(kit_list[ctr]), "\033[1;36mis being tested...\033[m");
-				death_times[ctr] = get_time() + (unsigned long long)stats.time2die;
+				death_times[ctr] = get_time(stats.timer_key) + (unsigned long long)(stats.time2die * 1000);
 				*(kit_list[ctr].just_ate) = 0;
 			}
 //			printf("%d   %llu %llu\n", kit_list[ctr].id, death_times[ctr], time);

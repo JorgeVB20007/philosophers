@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/23 22:58:55 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/24 20:02:07 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,24 +19,28 @@ void	printer(t_philokit kit, char *action)
 		pthread_mutex_lock(kit.stats.printer_key);
 		if (*(kit.status) != STOP)
 		{
-			printf("%d   %6llu %s%3d%s %s\n", (*(kit.status) == DEAD * 2) + (*(kit.status) == STOP), get_time() - kit.stats.start_time, BOLD, kit.id, FMT_RST, action);
+			if ((*(kit.status) == DEAD && !ft_strcmp(action, DIE)) || *(kit.status) != DEAD)
+			{
+				printf("%d   %6llu - %6llu = %6llu  %s%3d%s %s\n", ((*(kit.status) == DEAD) * 2) + (*(kit.status) == STOP), get_time(kit.stats.timer_key), /*- */kit.stats.start_time, get_time(kit.stats.timer_key) - kit.stats.start_time, BOLD, kit.id, FMT_RST, action);
+			}
 		}
 		if (*(kit.status) == DEAD)
 		{
 			*(kit.status) = STOP;
-			ft_wait(50);
+			ft_wait(50, kit.stats.timer_key);
 		}
+//		ft_wait(2, kit.stats.timer_key);
 		pthread_mutex_unlock(kit.stats.printer_key);
 	}
 }
 
-// Will wait *time* nanoseconds.
-void	ft_wait(int time)
+// Will wait *time* microseconds.
+void	ft_wait(int time, pthread_mutex_t *timer_key)
 {
 	unsigned long long	final_time;
 
-	final_time = get_time() + (unsigned long long) time;
-	while (final_time > get_time())
+	final_time = get_time(timer_key) + (unsigned long long)time * 1000;
+	while (final_time > get_time(timer_key))
 	{
 		usleep (5);
 	}
@@ -64,13 +68,16 @@ int	positive_atoi(char *str)
 		return (-1);
 }
 
-unsigned long long	get_time(void)
+// Gets the time in microseconds.
+unsigned long long	get_time(pthread_mutex_t *timer_key)
 {
 	struct timeval		time;
 	unsigned long long	total;
 
+	pthread_mutex_lock(timer_key);
 	gettimeofday(&time, NULL);
-	total = time.tv_usec / 1000 + time.tv_sec * 1000;
+	pthread_mutex_unlock(timer_key);
+	total = time.tv_usec + time.tv_sec * 1000000;
 	return (total);
 }
 
