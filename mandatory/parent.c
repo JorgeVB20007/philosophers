@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:24:45 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:37:39 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ void	stop_philos(t_philokit *kit_list)
 	a = 0;
 	while (a < kit_list[0].stats.num_philo)
 	{
-		*(kit_list[a].status) = STOP;
+		*(kit_list[a].status) = change_if_possible(kit_list[a], STOP);
 		a++;
 	}
 }
@@ -89,21 +89,23 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 	while (1)
 	{
 		ctr = -1;
-		time = get_time(stats.timer_key);
 		while (++ctr < stats.num_philo)
 		{
+			time = get_time(stats.timer_key);
 			if (*(kit_list[ctr].just_ate) == 1)
 			{
 //				printer(*(kit_list[ctr]), "\033[1;36mis being tested...\033[m");
-				death_times[ctr] = get_time(stats.timer_key) + (unsigned long long)(stats.time2die * 1000);
+				death_times[ctr] = (/*get_time(stats.timer_key)*/time/1000 + (unsigned long long)(stats.time2die)) * 1000;
 				*(kit_list[ctr].just_ate) = 0;
 			}
 //			printf("%d   %llu %llu\n", kit_list[ctr].id, death_times[ctr], time);
 			if (death_times[ctr] < time)
 			{
 //				pthread_mutex_lock(kit_list[0].stats.printer_key);
+				pthread_mutex_lock(kit_list[0].stats.timer_key);
 				stop_philos(kit_list);
 				*(kit_list[ctr].status) = DEAD;
+				pthread_mutex_unlock(kit_list[0].stats.timer_key);
 				printer((kit_list[ctr]), DIE);
 				ctr = -2;
 				break ;

@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:36:59 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/25 23:18:31 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,13 +21,15 @@ void	printer(t_philokit kit, char *action)
 		{
 			if ((*(kit.status) == DEAD && !ft_strcmp(action, DIE)) || *(kit.status) != DEAD)
 			{
-				printf("%6llu %s%3d%s %s\n", (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1000, BOLD, kit.id, FMT_RST, action);
+				if (*(kit.status) == DEAD)
+				{
+					ft_wait(1, kit.stats.timer_key);
+					printf("%d  %6llu %s%3d%s %s\n", (*(kit.status) == DEAD) + (*(kit.status) == STOP) * 2, (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1/*000*/, BOLD, kit.id, FMT_RST, action);
+					*(kit.status) = STOP;
+				}
+				else
+					printf("%d  %6llu %s%3d%s %s\n", (*(kit.status) == DEAD) + (*(kit.status) == STOP) * 2, (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1/*000*/, BOLD, kit.id, FMT_RST, action);
 			}
-		}
-		if (*(kit.status) == DEAD)
-		{
-			*(kit.status) = STOP;
-			ft_wait(50, kit.stats.timer_key);
 		}
 //		ft_wait(2, kit.stats.timer_key);
 		pthread_mutex_unlock(kit.stats.printer_key);
@@ -83,6 +85,7 @@ unsigned long long	get_time(pthread_mutex_t *timer_key)
 
 int	change_if_possible(t_philokit kit, int action)
 {
+	pthread_mutex_lock(kit.stats.timer_key);
 	if (*(kit.status) == DEAD || *(kit.status) == STOP)
 		return (*(kit.status));
 	else

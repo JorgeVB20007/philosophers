@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:29 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 20:35:59 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/25 19:01:18 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,7 @@ static int	eatingroutine(t_philokit *kit)
 		return (1);
 	}
 	*(kit->status) = change_if_possible(*kit, EATING);
+	pthread_mutex_unlock(kit->stats.timer_key);
 	*(kit->just_ate) = 1;
 	return (0);
 }
@@ -56,11 +57,13 @@ void	*philoroutine(void *unformatted_kit)
 			return (NULL);
 		printer(kit, SLP);
 		*(kit.status) = change_if_possible(kit, SLEEPING);
+		pthread_mutex_unlock(kit.stats.timer_key);
 		ft_wait(kit.stats.time2sleep, kit.stats.timer_key);
 		if (*(kit.status) == STOP)
 			return (NULL);
 		printer(kit, TNK);
 		*(kit.status) = change_if_possible(kit, THINKING);
+		pthread_mutex_unlock(kit.stats.timer_key);
 	}
 	return (NULL);
 }
