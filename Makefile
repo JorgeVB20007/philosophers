@@ -6,7 +6,7 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/14 21:32:27 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/26 20:33:11 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -41,7 +41,7 @@ all: obj $(LIBFT) $(NAME)
 obj:
 	@mkdir -p $(OBJ_DIR)
 $(OBJ_DIR)%.o:$(MAND_DIR)%.c $(INCLUDES)
-	@$(GCC) $(FLAGS) -I $(LIBFT_DIR) -I $(INC_DIR) -o $@ -c $<
+	@$(GCC) $(FLAGS) -pthread -I $(LIBFT_DIR) -I $(INC_DIR)  -o $@ -c $<
 $(LIBFT):
 	@make -C $(LIBFT_DIR)
 

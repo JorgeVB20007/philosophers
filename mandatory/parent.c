@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/25 23:37:39 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/26 21:12:25 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ static unsigned long long	*set_death_times(int philos, int time2die, pthread_mut
 	death_times = malloc(sizeof(unsigned long long) * philos);
 	while (a < philos)
 	{
-		death_times[a] = get_time(timer_key) + (unsigned long long)time2die * 1000;
+		death_times[a] = get_time(timer_key) + ((unsigned long long)time2die * 1000);
 		a++;
 	}
 	return (death_times);
@@ -95,7 +95,8 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 			if (*(kit_list[ctr].just_ate) == 1)
 			{
 //				printer(*(kit_list[ctr]), "\033[1;36mis being tested...\033[m");
-				death_times[ctr] = (/*get_time(stats.timer_key)*/time/1000 + (unsigned long long)(stats.time2die)) * 1000;
+				death_times[ctr] = get_time(stats.timer_key)/*time*/ + ((unsigned long long)(stats.time2die)) * 1000;
+///				printf("Current time = %llu | Death time = %llu | Difference = %llu\n", time, death_times[ctr], death_times[ctr] - time);
 				*(kit_list[ctr].just_ate) = 0;
 			}
 //			printf("%d   %llu %llu\n", kit_list[ctr].id, death_times[ctr], time);
@@ -118,12 +119,15 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 
 void	create_threads(t_stats stats)
 {
-	int				ctr;
-	t_philokit		*kit_list;
-	pthread_mutex_t	*forks_list;
-	pthread_t		*threads;
+	int					ctr;
+	t_philokit			*kit_list;
+	pthread_mutex_t		*forks_list;
+	pthread_t			*threads;
+	unsigned long long	start;
 
 	ctr = -1;
+	start = 0;
+	stats.start_time = &start;
 	forks_list = create_forks(stats);
 	kit_list = create_kits(stats, forks_list);
 	threads = malloc(sizeof(pthread_t) * stats.num_philo);
@@ -132,6 +136,7 @@ void	create_threads(t_stats stats)
 		pthread_create(&threads[ctr], NULL, philoroutine, (void *)(&(kit_list[ctr])));
 	}
 	ctr = -1;
+	start = get_time(stats.timer_key);
 	control_tower(kit_list, stats);
 	while (++ctr < stats.num_philo)
 	{

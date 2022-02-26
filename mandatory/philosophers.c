@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/24 19:49:26 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/26 23:09:35 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ static int parsing(int argc, char **argv)
 static t_stats	set_stats(int argc, char **argv)
 {
 	t_stats			stats;
-	pthread_mutex_t	prnt_key;
-	pthread_mutex_t	time_key;
+	pthread_mutex_t	*prnt_key;
+	pthread_mutex_t	*time_key;
 
 	stats.num_philo = positive_atoi(argv[1]);
 	stats.time2die = positive_atoi(argv[2]);
@@ -52,11 +52,13 @@ static t_stats	set_stats(int argc, char **argv)
 		stats.min_eats = positive_atoi(argv[5]);
 	else
 		stats.min_eats = -1;
-	pthread_mutex_init(&prnt_key, NULL);
-	pthread_mutex_init(&time_key, NULL);
-	stats.printer_key = &prnt_key;
-	stats.printer_key = &time_key;
-	stats.start_time = get_time(&time_key);
+	prnt_key = malloc(sizeof(pthread_mutex_t));
+	time_key = malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_init(prnt_key, NULL);
+	pthread_mutex_init(time_key, NULL);
+	stats.printer_key = prnt_key;
+	stats.timer_key = time_key;
+	stats.start_time = NULL;
 	return (stats);
 }
 

@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/25 23:18:31 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/26 23:09:52 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,24 +14,29 @@
 
 void	printer(t_philokit kit, char *action)
 {
+//	unsigned long long	time;
+
+//	time = 0;
 	if (*(kit.status) != STOP)
 	{
 		pthread_mutex_lock(kit.stats.printer_key);
 		if (*(kit.status) != STOP)
 		{
+//			time = get_time(kit.stats.timer_key);
 			if ((*(kit.status) == DEAD && !ft_strcmp(action, DIE)) || *(kit.status) != DEAD)
 			{
 				if (*(kit.status) == DEAD)
 				{
-					ft_wait(1, kit.stats.timer_key);
-					printf("%d  %6llu %s%3d%s %s\n", (*(kit.status) == DEAD) + (*(kit.status) == STOP) * 2, (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1/*000*/, BOLD, kit.id, FMT_RST, action);
+	//				ft_wait(1, kit.stats.timer_key);
+					printf("%6llu %s%3d%s %s\n", (get_time(kit.stats.timer_key) - *(kit.stats.start_time)) / 1000, BOLD, kit.id, FMT_RST, action);
 					*(kit.status) = STOP;
 				}
 				else
-					printf("%d  %6llu %s%3d%s %s\n", (*(kit.status) == DEAD) + (*(kit.status) == STOP) * 2, (get_time(kit.stats.timer_key) - kit.stats.start_time) / 1/*000*/, BOLD, kit.id, FMT_RST, action);
+				{
+					printf("%6llu %s%3d%s %s\n", (get_time(kit.stats.timer_key) - *(kit.stats.start_time)) / 1000, BOLD, kit.id, FMT_RST, action);
+				}
 			}
 		}
-//		ft_wait(2, kit.stats.timer_key);
 		pthread_mutex_unlock(kit.stats.printer_key);
 	}
 }
@@ -40,11 +45,14 @@ void	printer(t_philokit kit, char *action)
 void	ft_wait(int time, pthread_mutex_t *timer_key)
 {
 	unsigned long long	final_time;
+	unsigned long long	current_time;
 
-	final_time = get_time(timer_key) + (unsigned long long)time * 1000;
-	while (final_time > get_time(timer_key))
+	current_time = get_time(timer_key);
+	final_time = (current_time + (unsigned long long)time * 1000);
+	while (final_time > current_time)
 	{
-		usleep (5);
+		usleep ((final_time - current_time) / 2);
+		current_time = get_time(timer_key);
 	}
 }
 
@@ -85,7 +93,7 @@ unsigned long long	get_time(pthread_mutex_t *timer_key)
 
 int	change_if_possible(t_philokit kit, int action)
 {
-	pthread_mutex_lock(kit.stats.timer_key);
+//	pthread_mutex_lock(kit.stats.timer_key);
 	if (*(kit.status) == DEAD || *(kit.status) == STOP)
 		return (*(kit.status));
 	else

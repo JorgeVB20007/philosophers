@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/25 18:32:43 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/26 19:31:43 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_stats
 	int					min_eats;
 	pthread_mutex_t		*printer_key;
 	pthread_mutex_t		*timer_key;
-	unsigned long long	start_time;
+	unsigned long long	*start_time;
 }	t_stats;
 
 typedef struct s_philokit

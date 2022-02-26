@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:29 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/25 19:01:18 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/26 23:14:20 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ static int	eatingroutine(t_philokit *kit)
 		return (1);
 	}
 	*(kit->status) = change_if_possible(*kit, EATING);
-	pthread_mutex_unlock(kit->stats.timer_key);
+//	pthread_mutex_unlock(kit->stats.timer_key);
 	*(kit->just_ate) = 1;
 	return (0);
 }
@@ -44,8 +44,10 @@ void	*philoroutine(void *unformatted_kit)
 //	printf("Philo %d just started!\n", kit.id);
 //	ft_wait(100);
 //	printf(" (%d)  <- %p %p ->\n", kit.id, kit.left, kit.right);
+	while (!(*(kit.stats.start_time)))
+		usleep(5);
 	if (!(kit.id % 2))
-		ft_wait(50, kit.stats.timer_key);
+		usleep(10000);
 	while (1)
 	{
 		if (eatingroutine(&kit))
@@ -57,13 +59,13 @@ void	*philoroutine(void *unformatted_kit)
 			return (NULL);
 		printer(kit, SLP);
 		*(kit.status) = change_if_possible(kit, SLEEPING);
-		pthread_mutex_unlock(kit.stats.timer_key);
+//		pthread_mutex_unlock(kit.stats.timer_key);
 		ft_wait(kit.stats.time2sleep, kit.stats.timer_key);
 		if (*(kit.status) == STOP)
 			return (NULL);
 		printer(kit, TNK);
 		*(kit.status) = change_if_possible(kit, THINKING);
-		pthread_mutex_unlock(kit.stats.timer_key);
+//		pthread_mutex_unlock(kit.stats.timer_key);
 	}
 	return (NULL);
 }
