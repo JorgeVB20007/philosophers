@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/26 23:09:35 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/27 23:07:46 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,3 +71,11 @@ int	main(int argc, char **argv)
 	stats = set_stats(argc, argv);
 	create_threads(stats);
 }
+
+
+/*
+Everything seems to work, except for cases where *time2die* is too close to *time2sleep* + *time2eat*, but it shouldn't be a problem. 
+Times get delayed over time way less than before. 
+Libft still in use. 
+minimum_times_each_philosopher_shoul_eat needs to be implemented.
+*/

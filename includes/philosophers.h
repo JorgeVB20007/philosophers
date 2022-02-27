@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/26 19:31:43 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/27 22:51:00 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ typedef struct s_stats
 	int					min_eats;
 	pthread_mutex_t		*printer_key;
 	pthread_mutex_t		*timer_key;
-	unsigned long long	*start_time;
+	uint64_t	*start_time;
 }	t_stats;
 
 typedef struct s_philokit
@@ -75,7 +75,7 @@ void	create_threads(t_stats stats);
 //*	mandatory/printer.c
 ////void				printer_str(pthread_mutex_t *key, char *text);
 ////void				printer_num(pthread_mutex_t *key, int num);
-////void				printer(t_philokit kit, char *action, unsigned long long time);
+////void				printer(t_philokit kit, char *action, uint64_t time);
 
 //*	mandatory/thread_new.c
 ////void				*new_philo(void *unformatted_kit);
@@ -86,11 +86,11 @@ void	create_threads(t_stats stats);
 //*	mandatory/utils.c
 void				ft_wait(int time, pthread_mutex_t *timer_key);
 void				printer(t_philokit kit, char *action);
-unsigned long long	get_time(pthread_mutex_t *timer_key);
+uint64_t	get_time(/*pthread_mutex_t *timer_key*/);
 int					change_if_possible(t_philokit kit, int action);
 
 
-////unsigned long long	get_time2(void);
+////uint64_t	get_time2(void);
 int					positive_atoi(char *str);
 ////int					is_ok_to_end(t_philokit kit);
 

@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/26 21:12:25 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/27 22:38:00 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,16 +52,16 @@ static t_philokit	*create_kits(t_stats stats, pthread_mutex_t *forks)
 	return (kit_list);
 }
 
-static unsigned long long	*set_death_times(int philos, int time2die, pthread_mutex_t *timer_key)
+static uint64_t	*set_death_times(int philos, int time2die/*, pthread_mutex_t *timer_key*/)
 {
 	int	a;
-	unsigned long long	*death_times;
+	uint64_t	*death_times;
 
 	a = 0;
-	death_times = malloc(sizeof(unsigned long long) * philos);
+	death_times = malloc(sizeof(uint64_t) * philos);
 	while (a < philos)
 	{
-		death_times[a] = get_time(timer_key) + ((unsigned long long)time2die * 1000);
+		death_times[a] = get_time(/*timer_key*/) + ((uint64_t)time2die * 1000);
 		a++;
 	}
 	return (death_times);
@@ -82,25 +82,24 @@ void	stop_philos(t_philokit *kit_list)
 void	control_tower(t_philokit *kit_list, t_stats stats)
 {
 	int					ctr;
-	unsigned long long	*death_times;
-	unsigned long long	time;
+	uint64_t	*death_times;
+	uint64_t	time;
 
-	death_times = set_death_times(stats.num_philo, stats.time2die, stats.timer_key);
+	death_times = set_death_times(stats.num_philo, stats.time2die/*, stats.timer_key*/);
 	while (1)
 	{
 		ctr = -1;
 		while (++ctr < stats.num_philo)
 		{
-			time = get_time(stats.timer_key);
+			time = get_time(/*stats.timer_key*/);
 			if (*(kit_list[ctr].just_ate) == 1)
 			{
 //				printer(*(kit_list[ctr]), "\033[1;36mis being tested...\033[m");
-				death_times[ctr] = get_time(stats.timer_key)/*time*/ + ((unsigned long long)(stats.time2die)) * 1000;
+				death_times[ctr] = get_time(/*stats.timer_key*/)/*time*/ + ((uint64_t)(stats.time2die)) * 1000;
 ///				printf("Current time = %llu | Death time = %llu | Difference = %llu\n", time, death_times[ctr], death_times[ctr] - time);
 				*(kit_list[ctr].just_ate) = 0;
 			}
-//			printf("%d   %llu %llu\n", kit_list[ctr].id, death_times[ctr], time);
-			if (death_times[ctr] < time)
+			else if (death_times[ctr] < time)
 			{
 //				pthread_mutex_lock(kit_list[0].stats.printer_key);
 				pthread_mutex_lock(kit_list[0].stats.timer_key);
@@ -123,7 +122,7 @@ void	create_threads(t_stats stats)
 	t_philokit			*kit_list;
 	pthread_mutex_t		*forks_list;
 	pthread_t			*threads;
-	unsigned long long	start;
+	uint64_t	start;
 
 	ctr = -1;
 	start = 0;
@@ -136,7 +135,7 @@ void	create_threads(t_stats stats)
 		pthread_create(&threads[ctr], NULL, philoroutine, (void *)(&(kit_list[ctr])));
 	}
 	ctr = -1;
-	start = get_time(stats.timer_key);
+	start = get_time(/*stats.timer_key*/);
 	control_tower(kit_list, stats);
 	while (++ctr < stats.num_philo)
 	{
