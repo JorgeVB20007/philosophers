@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:33 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/27 22:50:53 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:32:22 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,7 @@ void	printer(t_philokit kit, char *action)
 }
 
 // Will wait *time* microseconds.
-void	ft_wait(int time, pthread_mutex_t *timer_key)
+void	ft_wait(int time, pthread_mutex_t *timer_key, uint64_t delay)
 {
 	struct		timeval		act_time;
 	uint64_t	final_time;
@@ -50,8 +50,9 @@ void	ft_wait(int time, pthread_mutex_t *timer_key)
 
 	gettimeofday(&act_time, NULL);
 	current_time = act_time.tv_usec + act_time.tv_sec * 1000000;
-	final_time = (current_time + (uint64_t)time * 1000);
-//	printf("Delay = %llu  |  Final time = %llu vs %llu | Wait time = %d\n", delay, final_time, current_time, time);
+	final_time = (current_time + (uint64_t)time * 1000) - delay;
+//	if (delay)
+//		printf("Delay = %llu  |  Final time = %llu vs %llu | Wait time = %d\n", delay, final_time, current_time, time);
 	while (final_time > current_time)
 	{
 		usleep ((final_time - current_time) / 2);

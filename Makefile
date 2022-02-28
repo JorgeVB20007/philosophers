@@ -6,14 +6,14 @@
 #    By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2022/02/01 18:29:55 by jvacaris          #+#    #+#              #
-#    Updated: 2022/02/27 20:05:59 by jvacaris         ###   ########.fr        #
+#    Updated: 2022/02/28 18:57:00 by jvacaris         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 
 NAME	= philo
 GCC		= gcc
-FLAGS	= -Wall -Wextra -Werror #-g3 -fsanitize=address
+FLAGS	= -Wall -Wextra -Werror #-g3 -fsanitize=thread
 
 INCLUDES_FILES =	philosophers.h
 

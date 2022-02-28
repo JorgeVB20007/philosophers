@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/27 23:07:46 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:44:18 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ static int parsing(int argc, char **argv)
 		printf("Error: Invalid amount of philosophers (1-200).\n");
 		return (1);
 	}
-	if (positive_atoi(argv[2]) < 20 || positive_atoi(argv[3]) < 20 || \
-	positive_atoi(argv[4]) < 20)
+	if (positive_atoi(argv[2]) < 50 || positive_atoi(argv[3]) < 50 || \
+	positive_atoi(argv[4]) < 50)
 	{
-		printf("Error: Invalid times (must be over 20ms).\n");
+		printf("Error: Invalid times (must be over 50ms).\n");
 		return (1);
 	}
-	if (argc == 6 && positive_atoi(argv[5]) < 0)
+	if (argc == 6 && positive_atoi(argv[5]) <= 0)
 	{
 		printf("Error: Invalid last argument (must be over 0).\n");
 		return (1);
@@ -74,8 +74,6 @@ int	main(int argc, char **argv)
 
 
 /*
-Everything seems to work, except for cases where *time2die* is too close to *time2sleep* + *time2eat*, but it shouldn't be a problem. 
-Times get delayed over time way less than before. 
-Libft still in use. 
-minimum_times_each_philosopher_shoul_eat needs to be implemented.
+Libft still in use.
+Norminette's mad at me.
 */

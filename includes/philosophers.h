@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/27 22:51:00 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:30:55 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,12 @@ enum	e_action_being_done
 };
 
 //* philoroutine.c
-void	*philoroutine(void *unformatted_kit);
+void		*philoroutine(void *unformatted_kit);
+void		*only_one_philo(void *unformatted_kit);
 
 //* parent.c
 
-void	create_threads(t_stats stats);
+void		create_threads(t_stats stats);
 
 //*	mandatory/printer.c
 ////void				printer_str(pthread_mutex_t *key, char *text);
@@ -84,14 +85,14 @@ void	create_threads(t_stats stats);
 ////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
 
 //*	mandatory/utils.c
-void				ft_wait(int time, pthread_mutex_t *timer_key);
-void				printer(t_philokit kit, char *action);
+void		ft_wait(int time, pthread_mutex_t *timer_key, uint64_t delay);
+void		printer(t_philokit kit, char *action);
 uint64_t	get_time(/*pthread_mutex_t *timer_key*/);
-int					change_if_possible(t_philokit kit, int action);
+int			change_if_possible(t_philokit kit, int action);
 
 
 ////uint64_t	get_time2(void);
-int					positive_atoi(char *str);
+int			positive_atoi(char *str);
 ////int					is_ok_to_end(t_philokit kit);
 
 #endif

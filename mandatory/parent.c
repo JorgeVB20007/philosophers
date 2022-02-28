@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:20 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/27 22:38:00 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/02/28 23:51:53 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,10 +81,12 @@ void	stop_philos(t_philokit *kit_list)
 
 void	control_tower(t_philokit *kit_list, t_stats stats)
 {
-	int					ctr;
+	int			ctr;
 	uint64_t	*death_times;
 	uint64_t	time;
+	int			end_eats;
 
+	end_eats = 0;
 	death_times = set_death_times(stats.num_philo, stats.time2die/*, stats.timer_key*/);
 	while (1)
 	{
@@ -92,16 +94,18 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 		while (++ctr < stats.num_philo)
 		{
 			time = get_time(/*stats.timer_key*/);
-			if (*(kit_list[ctr].just_ate) == 1)
+			if (*(kit_list[ctr].just_ate) > 0)
 			{
-//				printer(*(kit_list[ctr]), "\033[1;36mis being tested...\033[m");
 				death_times[ctr] = get_time(/*stats.timer_key*/)/*time*/ + ((uint64_t)(stats.time2die)) * 1000;
-///				printf("Current time = %llu | Death time = %llu | Difference = %llu\n", time, death_times[ctr], death_times[ctr] - time);
+				if (*(kit_list[ctr].just_ate) > 1)
+				{
+					end_eats++;
+					printf("\n\nSOMEONE FINISHED. End eats = %d\n\n", end_eats);
+				}
 				*(kit_list[ctr].just_ate) = 0;
 			}
 			else if (death_times[ctr] < time)
 			{
-//				pthread_mutex_lock(kit_list[0].stats.printer_key);
 				pthread_mutex_lock(kit_list[0].stats.timer_key);
 				stop_philos(kit_list);
 				*(kit_list[ctr].status) = DEAD;
@@ -110,9 +114,19 @@ void	control_tower(t_philokit *kit_list, t_stats stats)
 				ctr = -2;
 				break ;
 			}
+			if (end_eats >= stats.num_philo)
+			{
+				pthread_mutex_lock(kit_list[0].stats.timer_key);
+				stop_philos(kit_list);
+				pthread_mutex_unlock(kit_list[0].stats.timer_key);
+				break ;
+			}
 		}
-		if (ctr == -2)
+//		printf(" %d %d\n", end_eats, stats.min_eats);
+		if (ctr == -2 || (end_eats >= stats.min_eats && stats.min_eats > 0))
 			break ;
+		usleep(100);
+//		printf("\n%llu\n", get_time());
 	}
 }
 
@@ -130,6 +144,12 @@ void	create_threads(t_stats stats)
 	forks_list = create_forks(stats);
 	kit_list = create_kits(stats, forks_list);
 	threads = malloc(sizeof(pthread_t) * stats.num_philo);
+	if (stats.num_philo == 1)
+	{
+		pthread_create(&threads[ctr], NULL, only_one_philo, (void *)(&(kit_list[0])));
+		pthread_join(threads[ctr], NULL);
+		return ;
+	}
 	while (++ctr < stats.num_philo)
 	{
 		pthread_create(&threads[ctr], NULL, philoroutine, (void *)(&(kit_list[ctr])));
