@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/28 23:30:55 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 00:07:47 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ typedef struct s_philokit
 	int					times_eaten;
 	int					temp_just_ate;
 	int					*just_ate;
+	pthread_mutex_t		*comms_mutex;
 	pthread_mutex_t		*right;
 	pthread_mutex_t		*left;
 	t_stats				stats;
@@ -85,11 +86,12 @@ void		create_threads(t_stats stats);
 ////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
 
 //*	mandatory/utils.c
-void		ft_wait(int time, pthread_mutex_t *timer_key, uint64_t delay);
+void		ft_wait(int time, uint64_t delay);
 void		printer(t_philokit kit, char *action);
 uint64_t	get_time(/*pthread_mutex_t *timer_key*/);
-int			change_if_possible(t_philokit kit, int action);
-
+int			change_if_possible(t_philokit kit, int action, pthread_mutex_t *comms_mutex);
+int			check_int_with_mutex(int *number, pthread_mutex_t *comms_mutex);
+uint64_t	check_uint64t_with_mutex(uint64_t *number, pthread_mutex_t *comms_mutex);
 
 ////uint64_t	get_time2(void);
 int			positive_atoi(char *str);

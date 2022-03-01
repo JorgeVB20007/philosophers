@@ -6,46 +6,43 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:29 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/02/28 23:43:50 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 00:28:02 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/philosophers.h"
 
-void	*only_one_philo(void *unformatted_kit)
+static void	update_kit_status(t_philokit *kit, int new_status)
 {
-	t_philokit	kit;
-
-	kit = *((t_philokit *)unformatted_kit);
-	pthread_mutex_lock(kit.left);
-	printf("%6d %s%3d%s %s\n", 0, BOLD, kit.id, FMT_RST, FRK);
-	ft_wait(kit.stats.time2die, kit.stats.timer_key, 0);
-	printf("%6d %s%3d%s %s\n", kit.stats.time2die, BOLD, 1, FMT_RST, DIE);
-	pthread_mutex_unlock(kit.left);
-	return (NULL);
+	pthread_mutex_lock(kit->comms_mutex);
+	if (*(kit->status) != DEAD && *(kit->status) != STOP)
+		*(kit->status) = new_status;
+	pthread_mutex_unlock(kit->comms_mutex);
 }
 
 static int	eatingroutine(t_philokit *kit)
 {
 	pthread_mutex_lock(kit->right);
 	printer(*kit, FRK_R);
-	if (*(kit->status) == STOP)
+	if (check_int_with_mutex(kit->status, kit->comms_mutex) == STOP)
 	{
 		pthread_mutex_unlock(kit->right);
 		return (1);
 	}
 	pthread_mutex_lock(kit->left);
-	*(kit->just_ate) = 1 + !(kit->times_eaten - kit->stats.min_eats);
 	kit->times_eaten = kit->times_eaten + 1;
+	pthread_mutex_lock(kit->comms_mutex);
+	*(kit->just_ate) = 1 + !(kit->times_eaten - kit->stats.min_eats);
+	pthread_mutex_unlock(kit->comms_mutex);
 	printer(*kit, FRK_L);
 	printer(*kit, EAT);
-	if (*(kit->status) == STOP)
+	if (check_int_with_mutex(kit->status, kit->comms_mutex) == STOP)
 	{
 		pthread_mutex_unlock(kit->right);
 		pthread_mutex_unlock(kit->left);
 		return (1);
 	}
-	*(kit->status) = change_if_possible(*kit, EATING);
+	update_kit_status(kit, EATING);
 	return (0);
 }
 
@@ -56,7 +53,7 @@ void	*philoroutine(void *unformatted_kit)
 
 	kit = *((t_philokit *)unformatted_kit);
 	delay = 0;
-	while (!(*(kit.stats.start_time)))
+	while (!check_uint64t_with_mutex(kit.stats.start_time, kit.comms_mutex))
 		usleep(5);
 	if (!(kit.id % 2))
 		usleep(5000);
@@ -66,21 +63,21 @@ void	*philoroutine(void *unformatted_kit)
 			return (NULL);
 		if (delay)
 			delay = get_time() - delay;
-		ft_wait(kit.stats.time2eat, kit.stats.timer_key, delay);
+		ft_wait(kit.stats.time2eat, delay);
 		delay = get_time();
 		pthread_mutex_unlock(kit.right);
 		pthread_mutex_unlock(kit.left);
-		if (*(kit.status) == STOP)
+		if (check_int_with_mutex(kit.status, kit.comms_mutex) == STOP)
 			return (NULL);
 		printer(kit, SLP);
-		*(kit.status) = change_if_possible(kit, SLEEPING);
+		update_kit_status(&kit, SLEEPING);
 		delay = get_time() - delay;
-		ft_wait(kit.stats.time2sleep, kit.stats.timer_key, delay);
+		ft_wait(kit.stats.time2sleep, delay);
 		delay = get_time();
-		if (*(kit.status) == STOP)
+		if (check_int_with_mutex(kit.status, kit.comms_mutex) == STOP)
 			return (NULL);
 		printer(kit, TNK);
-		*(kit.status) = change_if_possible(kit, THINKING);
+		update_kit_status(&kit, THINKING);
 	}
 	return (NULL);
 }
