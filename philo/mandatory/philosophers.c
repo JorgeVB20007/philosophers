@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/03/02 21:06:18 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 21:45:47 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,12 @@ static int	parsing(int argc, char **argv)
 	if (positive_atoi(argv[2]) < 50 || positive_atoi(argv[3]) < 50 || \
 	positive_atoi(argv[4]) < 50)
 	{
-		printf("Error: Invalid times (must be over 50ms).\n");
+		printf("Error: Invalid times (must be an int over 50ms).\n");
 		return (1);
 	}
 	if (argc == 6 && positive_atoi(argv[5]) <= 0)
 	{
-		printf("Error: Invalid last argument (must be over 0).\n");
+		printf("Error: Invalid last argument (must be an int over 0).\n");
 		return (1);
 	}
 	return (0);
@@ -72,7 +72,7 @@ void	*singlephilo_thread(void *unformatted_kit)
 	kit = *((t_philokit *)unformatted_kit);
 	pthread_mutex_lock(kit.left);
 	printf("%6d %s%3d%s %s\n", 0, BOLD, 1, FMT_RST, FRK);
-	ft_wait(kit.stats.time2die, 0);
+	ft_wait(kit.stats.time2die, 0, NULL, NULL);
 	printf("%6d %s%3d%s %s\n", kit.stats.time2die, BOLD, 1, FMT_RST, DIE);
 	return (NULL);
 }

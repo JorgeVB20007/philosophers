@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:29 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/03/02 21:28:27 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 21:45:33 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ static void	update_kit_status(t_philokit *kit, int new_status)
 static int	eatingroutine(t_philokit *kit)
 {
 	pthread_mutex_lock(kit->right);
-	printer(*kit, FRK_R);
+	printer(*kit, FRK);
 	if (chk_int_with_mtx(kit->status, kit->comms_mutex) == STOP)
 	{
 		pthread_mutex_unlock(kit->right);
@@ -34,7 +34,7 @@ static int	eatingroutine(t_philokit *kit)
 	pthread_mutex_lock(kit->comms_mutex);
 	*(kit->just_ate) = 1 + !(kit->times_eaten - kit->stats.min_eats);
 	pthread_mutex_unlock(kit->comms_mutex);
-	printer(*kit, FRK_L);
+	printer(*kit, FRK);
 	printer(*kit, EAT);
 	if (chk_int_with_mtx(kit->status, kit->comms_mutex) == STOP)
 	{
@@ -57,7 +57,7 @@ static void	philoroutine_loop(t_philokit kit)
 			break ;
 		if (delay)
 			delay = get_time() - delay;
-		ft_wait(kit.stats.time2eat, delay);
+		ft_wait(kit.stats.time2eat, delay, kit.status, kit.comms_mutex);
 		delay = get_time();
 		pthread_mutex_unlock(kit.right);
 		pthread_mutex_unlock(kit.left);
@@ -66,7 +66,7 @@ static void	philoroutine_loop(t_philokit kit)
 		printer(kit, SLP);
 		update_kit_status(&kit, SLEEPING);
 		delay = get_time() - delay;
-		ft_wait(kit.stats.time2sleep, delay);
+		ft_wait(kit.stats.time2sleep, delay, kit.status, kit.comms_mutex);
 		delay = get_time();
 		if (chk_int_with_mtx(kit.status, kit.comms_mutex) == STOP)
 			break ;

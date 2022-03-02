@@ -6,14 +6,12 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/03/02 20:52:09 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 21:45:00 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PHILOSOPHERS_H
 # define PHILOSOPHERS_H
-# define FRK_R "has taken their right fork"
-# define FRK_L "has taken their left fork"
 # define FRK "has taken a fork"
 # define EAT "\033[0;33mis eating\033[m"
 # define SLP "\033[0;32mis sleeping\033[m"
@@ -90,7 +88,8 @@ void			*philoroutine(void *unformatted_kit);
 void			*only_one_philo(void *unformatted_kit);
 
 //*	mandatory/utils_one.c
-void			ft_wait(int time, uint64_t delay);
+void			ft_wait(int time, uint64_t delay, int *status, \
+pthread_mutex_t *comms_mutex);
 void			printer(t_philokit kit, char *action);
 uint64_t		get_time(void);
 int				positive_atoi(char *str);
