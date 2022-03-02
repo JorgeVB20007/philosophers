@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/01 18:29:47 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/03/02 00:07:47 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 20:52:09 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@
 # include <limits.h>
 # include <stdint.h>
 # include <sys/time.h>
-# include "../libft/libft.h"
+//# include "../libft/libft.h"
 
 typedef struct s_stats
 {
@@ -40,7 +40,7 @@ typedef struct s_stats
 	int					min_eats;
 	pthread_mutex_t		*printer_key;
 	pthread_mutex_t		*timer_key;
-	uint64_t	*start_time;
+	uint64_t			*start_time;
 }	t_stats;
 
 typedef struct s_philokit
@@ -66,35 +66,39 @@ enum	e_action_being_done
 	STOP
 };
 
-//* philoroutine.c
-void		*philoroutine(void *unformatted_kit);
-void		*only_one_philo(void *unformatted_kit);
+//* not_libft.c
+int				ft_atoi(const char *str);
+int				ft_strcmp(const char *s1, const char *s2);
+
+//* parent_creators.c
+pthread_mutex_t	*create_comms_mutex(t_stats stats);
+pthread_mutex_t	*create_forks(t_stats stats);
+void			destroy_forks(t_stats stats, pthread_mutex_t *fork_list, \
+pthread_mutex_t *eats_list);
+t_philokit		*create_kits(t_stats stats, pthread_mutex_t *forks, \
+pthread_mutex_t *comms_mutex_list);
+
+//* parent_utils.c
+uint64_t		*set_death_times(int philos, int time2die);
+void			stop_philos(t_philokit *kit_list);
 
 //* parent.c
+void			prepare_threads(t_stats stats);
 
-void		create_threads(t_stats stats);
+//* philoroutine.c
+void			*philoroutine(void *unformatted_kit);
+void			*only_one_philo(void *unformatted_kit);
 
-//*	mandatory/printer.c
-////void				printer_str(pthread_mutex_t *key, char *text);
-////void				printer_num(pthread_mutex_t *key, int num);
-////void				printer(t_philokit kit, char *action, uint64_t time);
+//*	mandatory/utils_one.c
+void			ft_wait(int time, uint64_t delay);
+void			printer(t_philokit kit, char *action);
+uint64_t		get_time(void);
+int				positive_atoi(char *str);
 
-//*	mandatory/thread_new.c
-////void				*new_philo(void *unformatted_kit);
-
-//*	mandatory/threads.c
-////void				create_philos(t_stats stats, pthread_mutex_t **mutex_lst, int ctr);
-
-//*	mandatory/utils.c
-void		ft_wait(int time, uint64_t delay);
-void		printer(t_philokit kit, char *action);
-uint64_t	get_time(/*pthread_mutex_t *timer_key*/);
-int			change_if_possible(t_philokit kit, int action, pthread_mutex_t *comms_mutex);
-int			check_int_with_mutex(int *number, pthread_mutex_t *comms_mutex);
-uint64_t	check_uint64t_with_mutex(uint64_t *number, pthread_mutex_t *comms_mutex);
-
-////uint64_t	get_time2(void);
-int			positive_atoi(char *str);
-////int					is_ok_to_end(t_philokit kit);
+//*	mandatory/utils_two.c
+int				change_if_possible(t_philokit kit, int action, \
+pthread_mutex_t *comms_mutex);
+int				chk_int_with_mtx(int *nbr, pthread_mutex_t *cmms_mtx);
+uint64_t		chk_uint64t_with_mtx(uint64_t *nbr, pthread_mutex_t *cmms_mtx);
 
 #endif

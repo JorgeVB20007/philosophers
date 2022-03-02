@@ -4,7 +4,7 @@
 .vscode
 .DS_Store
 philosophers
-philo
+philo/philo
 a.out
 a
 b
@@ -20,3 +20,5 @@ objs
 obj/
 objs/
 .old_mandatory
+librt
+libft

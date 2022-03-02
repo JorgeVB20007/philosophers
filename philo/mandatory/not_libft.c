@@ -1,18 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_atoi.c                                          :+:      :+:    :+:   */
+/*   not_libft.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jvacaris <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2021/06/04 19:13:02 by jvacaris          #+#    #+#             */
-/*   Updated: 2021/06/04 19:13:06 by jvacaris         ###   ########.fr       */
+/*   Created: 2022/03/02 19:06:27 by jvacaris          #+#    #+#             */
+/*   Updated: 2022/03/02 19:10:55 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include "../includes/philosophers.h"
 
-int	ignorespaces(const char *str)
+static int	ignorespaces(const char *str)
 {
 	int	a;
 
@@ -49,4 +49,24 @@ int	ft_atoi(const char *str)
 	}
 	result = result * neg;
 	return ((int)result);
+}
+
+int	ft_strcmp(const char *s1, const char *s2)
+{
+	int	a;
+
+	a = 0;
+	if (!s1 && !s2)
+		return (0);
+	else if (s1 && !s2)
+		return (s1[a]);
+	else if (!s1 && s2)
+		return (-s2[a]);
+	while (s1[a] && s2[a])
+	{
+		if (s1[a] != s2[a])
+			return (s1[a] - s2[a]);
+		a++;
+	}
+	return (s1[a] - s2[a]);
 }

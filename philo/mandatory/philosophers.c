@@ -6,7 +6,7 @@
 /*   By: jvacaris <jvacaris@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2022/02/15 18:14:31 by jvacaris          #+#    #+#             */
-/*   Updated: 2022/03/02 00:27:28 by jvacaris         ###   ########.fr       */
+/*   Updated: 2022/03/02 21:06:18 by jvacaris         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,10 @@ static int	parsing(int argc, char **argv)
 {
 	if (argc < 5 || argc > 6)
 	{
-		printf("Error: At least 4 arguments are required.\n");
+		if (argc < 5)
+			printf("Error: At least 4 arguments are required.\n");
+		if (argc > 6)
+			printf("Error: No more than 6 arguments must be given.\n");
 		return (1);
 	}
 	if (positive_atoi(argv[1]) < 1 || positive_atoi(argv[1]) > 200)
@@ -102,7 +105,7 @@ int	main(int argc, char **argv)
 	if (stats.num_philo == 1)
 		singlephilo(stats);
 	else
-		create_threads(stats);
+		prepare_threads(stats);
 	pthread_mutex_destroy(stats.printer_key);
 	pthread_mutex_destroy(stats.timer_key);
 	free(stats.printer_key);
